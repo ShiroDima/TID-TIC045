@@ -75,6 +75,12 @@ a {
   align-items: center;
   justify-content: center;
 }
+.dp__container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding : 20px;
+}
 .search_form{
   height: 100%;
 
@@ -91,10 +97,32 @@ fieldset {
   margin: 0;
   background-color: #fff;
   border: 1.5px solid #08bcc2;
-  padding: 5rem;
+  padding: 3rem;
   z-index: 1;
   border-radius: 8px;
   box-shadow: 4px 4px 20px rgba(3, 255, 255, 0.171);
+}
+
+button {
+  background-color: rgb(9, 168, 173);
+  border-radius: 20%;
+  border-color: #00000000;
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: 10px;
+}
+
+input {
+  border-radius: 5px;
+  background: transparent;
+  border: 2px solid rgb(9, 168, 173);
+  outline: 0px;
+  color: rgb(182, 182, 182);
+  padding: 0 0 0 2rem;
+  transition: all 0.2s;
 }
 
 .flex {
