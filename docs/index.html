@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="" />
     <link rel="stylesheet" type="text/css" href="index.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <title>TID solution</title>
   </head>
   <body>
@@ -29,17 +30,18 @@
                  <img src='logo.jpeg' width="100px" height="auto" alt="logo image" class="dp" />                  
               </div>
 
-              <div class="postbar flex h_10 w_9">
-                 <form class="flex h_10 w_10 relative">
-                    <input type="text" placeholder="Search a location" class="h_6 w_10 m_a"/>
-                    <button class="absolute posts__button">
-                        &#128269;
-                    </button>
+               <div class="postbar flex h_10 w_9">
+                  <form class="flex h_10 w_10 relative">
+                     <input list="locations" placeholder="Search a location" class="h_6 w_10 m_a"/>
+                        <datalist id="locations"> 
+                        </datalist>
+                     <button class="absolute posts__button"> &#128269; </button>
                 </form>
               </div>
            </fieldset>
         </div>
     </div>
 
-  </body>
+      <script src="main.js"> </script>  
+   </body>
 </html>
