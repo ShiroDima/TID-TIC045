@@ -8,3 +8,5 @@ def get_score():
     # do a bunch of stuff here
     return f"<p>This should return calculated scores, for location = <i>{location}</i></p>"
 
+if __name__ == "__main__" :
+    app.run(debug=True)
