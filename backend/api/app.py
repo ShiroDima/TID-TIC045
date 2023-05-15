@@ -1,8 +1,10 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route("/score")
 def get_score():
-    return "<p>This should return calculated scores</p>"
+    location = request.args.get('location')
+    # do a bunch of stuff here
+    return f"<p>This should return calculated scores, for location = <i>{location}</i></p>"
 
