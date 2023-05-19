@@ -1,6 +1,7 @@
 body {
   margin: 0;
   /* display: flex; */
+  /* background-color: #212121; */
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
@@ -97,7 +98,7 @@ a {
 } 
 fieldset {
   margin: 0;
-  background-color: #fff;
+  background-color: #ffffff00;
   border: 1.5px solid #08bcc2;
   padding: 3rem;
   z-index: 1;
