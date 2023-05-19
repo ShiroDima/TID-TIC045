@@ -1,4 +1,4 @@
-import calculations as calc
+import utils.calculations as calc
 from flask import Flask, request
 # import calculations here. Also fix imports in the calculation file itself.
 import sys
