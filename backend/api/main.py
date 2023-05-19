@@ -13,9 +13,8 @@ app = Flask(__name__)
 @app.route("/score")
 def get_score():
     location = request.args.get('location')
-    # Get the latitude and longitude of the address that was selected
-    print(location)
-    return f"<p>Calculated score for {location} is:  <i>{calc.viability_score(location)}</i></p>"
+
+    return calc.viability_score(location)
 
 
 if __name__ == "__main__":
