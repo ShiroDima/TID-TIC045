@@ -1,27 +1,30 @@
 import geopandas as gpd
 import pandas as pd
 
+folder_path = "../data"
+link_path = "./utils"
+
 
 class Datasets:
     def __init__(self) -> None:
 
         # Loading all the datasets
-        self.power_plants = gpd.read_file("../../data/power_plants.csv",
+        self.power_plants = gpd.read_file(f"{folder_path}/power_plants.csv",
                                     GEOM_POSSIBLE_NAMES='geom',
                                     KEEP_GEOM_COLUMNS='NO')
 
         self.power_plants_2 = gpd.read_file(
-            '../../data/NGA_PowerPlants/NGA_PowerPlants.shp')
+            f'{folder_path}/NGA_PowerPlants/NGA_PowerPlants.shp')
 
-        self.state_boundaries = gpd.read_file('../../data/nigeria_state_boundaries.csv',
+        self.state_boundaries = gpd.read_file(f'{folder_path}/nigeria_state_boundaries.csv',
                                         GEOM_POSSIBLE_NAMES='geom',
                                         KEEP_GEOM_COLUMNS='NO')
 
-        self.transmission_substations = gpd.read_file('../../data/all_transmission_substations.csv',
+        self.transmission_substations = gpd.read_file(f'{folder_path}/all_transmission_substations.csv',
                                                 GEOM_POSSIBLE_NAMES='geom',
                                                 KEEP_GEOM_COLUMNS='NO')
 
-        self.grid = gpd.read_file('../../data/modelled_grid_original.csv',
+        self.grid = gpd.read_file(f'{folder_path}/modelled_grid_original.csv',
                             GEOM_POSSIBLE_NAMES='geom',
                             KEEP_GEOM_COLUMNS='NO')
 
@@ -29,6 +32,7 @@ class Datasets:
 
         self.electricity = self.get_electricity_data()
 
+        self.solar_viability = self._get_solar_viability_data()
         # self.convert_to_crs_types()
     
     # def convert_to_crs_types(self) -> None:
@@ -55,20 +59,20 @@ class Datasets:
 
     def get_ghi_data(self):
 
-        solcast_index = pd.read_csv("../../data/Solcast/Solcast/solcast_index.csv")
+        solcast_index = pd.read_csv(f"{folder_path}/Solcast/Solcast/solcast_index.csv")
 
-        state_boundaries = gpd.read_file('../../data/nigeria_state_boundaries.csv', GEOM_POSSIBLE_NAMES='geom',
+        state_boundaries = gpd.read_file(f'{folder_path}/nigeria_state_boundaries.csv', GEOM_POSSIBLE_NAMES='geom',
                                          KEEP_GEOM_COLUMNS='NO')
 
         # literally cut and join. Will be revised later.
 
         # Applies the function across all states dataset and appends the result to the empty list
         irradiance_list = []
-        with open('./links.txt', 'r') as links:
+        with open(f'{link_path}/links.txt', 'r') as links:
             filepaths = links.read().split('\n')
         for index, link in enumerate(filepaths):
             state = solcast_index.loc[index, 'State']
-            irradiance_list.append(self._get_irradiance(state, link.replace("/content/drive/MyDrive/TID_Innovation/Data", "../../data/Solcast")))
+            irradiance_list.append(self._get_irradiance(state, link.replace("/content/drive/MyDrive/TID_Innovation/Data", f"{folder_path}/Solcast")))
 
         # Creates_DataFrame
         Ghi = [item[0] for item in irradiance_list]
@@ -91,15 +95,15 @@ class Datasets:
         # Reading_csv
         state = pd.read_csv(csv_path)
         # Retrieving_the_date_from_the_PeriodStart_column
-        state[['date','start_time']]=state['PeriodStart'].str.split('T',expand=True)
+        state[['date', 'start_time']] = state['PeriodStart'].str.split('T', expand=True)
         # Converting the hourly irradiance data to daily irradiance data(Wh/day/m2)                                          
-        daily_irradiance=state.groupby('date').sum()[['Ghi', 'GtiFixedTilt', 'GtiTracking']]
+        daily_irradiance = state.groupby('date').sum()[['Ghi', 'GtiFixedTilt', 'GtiTracking']]
         # calculates and returns the average daily irradiance data for the year 2022. It also converts it from W to KW                               
         return list(round(daily_irradiance.mean() / 1000, 2))
 
     @staticmethod
     def get_electricity_data():
-        file = "../../data/Nigeria Electricity Data.xlsx"
+        file = f"{folder_path}/Nigeria Electricity Data.xlsx"
         df_2021 = pd.read_excel(file, sheet_name="2021 MIS").set_index("State").drop(columns=["Country", "Survey"])
         df_2018 = pd.read_excel(file, sheet_name="2018 DHS").set_index("State").drop(columns=["Country", "Survey"])
         df_2015 = pd.read_excel(file, sheet_name="2015 MIS").set_index("State").drop(columns=["Country", "Survey"])
@@ -118,3 +122,17 @@ class Datasets:
         pop_df.columns = ["2013", "2015", "2018", "2021"]
 
         return pop_df
+
+    def _get_solar_viability_data(self) -> pd.DataFrame:
+        """
+        This function reads in and prepares the solar viability dataframe.
+        """
+        solar_viability_data = pd.read_csv(f'{folder_path}/solar_viability_data.csv')
+        solar_viability_data['ghi_normalized'] = (solar_viability_data.ghi - solar_viability_data.ghi.min()) / (
+                    solar_viability_data.ghi.max() - solar_viability_data.ghi.min())
+        solar_viability_data['electricity_normalized'] = (
+                        solar_viability_data.percent_electricity - solar_viability_data.percent_electricity.min()) / \
+                    (solar_viability_data.percent_electricity.max() - solar_viability_data.percent_electricity.min())
+
+        return solar_viability_data
+

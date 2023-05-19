@@ -1,9 +1,9 @@
-from get_data import Datasets
-import geopandas as gpd
-from shapely.geometry import Point
-import folium
 import pandas as pd
 import pyproj
+from shapely.geometry import Point
+
+from utils.get_data import Datasets
+from utils.coordinate_getter import get_coordinates
 
 data = Datasets()
 
@@ -43,6 +43,7 @@ def distance_calculator(longitude, latitude, n_closest):
     transmission_substations_distance = pd.DataFrame({'transmission_substation': list(data.transmission_substations['FID']),
                                                       'osm_id': list(data.transmission_substations['osm_id']),
                                                       'distance': distance})
+    transmission_substations_distance = transmission_substations_distance.sort_values('distance')
 
     return plant_distance.head(n_closest), transmission_substations_distance.head(n_closest)
 
@@ -50,9 +51,30 @@ def distance_calculator(longitude, latitude, n_closest):
 # print(distance_calculator(7.5000, 5.20000, 5))
 
 
-def calculate_score() -> float:
+def viability_score(location: str) -> float:
     """
-    This function calculates the score for a particular region. This score is an indicator of the potential of a region
-    as a good place for solar power intervention.
+        This function calculates the score for a particular region. This score is an indicator of the potential of a region
+        as a good place for solar power intervention.
     """
-    pass
+    weight_ghi = 0.4
+    weight_distance = 0.4
+    weight_electricity = 0.2
+
+    latitude, longitude = get_coordinates(location)
+
+    location = Point(longitude, latitude)
+    transformer = pyproj.Transformer.from_crs("EPSG:4326", "EPSG:32645")
+    location = Point(transformer.transform(location.x, location.y))
+
+    # I've not normalized the distance
+    # distance = list(transmission_substations.geometry.distance(location))
+    distance = list(data.solar_viability.geometry.distance(location))
+    distance = min(distance)
+
+    for _, row in data.solar_viability.iterrows():
+        if row.geometry.contains(location):
+            ghi = row.ghi_normalized
+            electricity = row.electricity_normalized
+
+    return (weight_ghi * ghi) + (weight_distance * distance) + (weight_electricity * electricity)
+
