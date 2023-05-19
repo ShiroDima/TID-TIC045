@@ -2,8 +2,8 @@ import pandas as pd
 import pyproj
 from shapely.geometry import Point
 
-from utils.get_data import Datasets
-from utils.coordinate_getter import get_coordinates
+from get_data import Datasets
+from coordinate_getter import get_coordinates
 
 data = Datasets()
 
