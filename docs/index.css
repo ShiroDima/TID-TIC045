@@ -14,6 +14,11 @@ body {
   /* overflow-x: hidden; */
 }
 
+.text-center{
+  text-align: center;
+  color: rgb(73, 81, 82);
+  font-weight: 300;
+}
 
 .navbar {
   width: 95%; 
