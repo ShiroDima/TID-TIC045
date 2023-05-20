@@ -135,6 +135,7 @@ class Datasets:
 
         solar_viability_data.ghi = solar_viability_data.ghi.astype('float')
         solar_viability_data.percent_electricity = solar_viability_data.percent_electricity.astype('float')
+
         solar_viability_data['ghi_normalized'] = (solar_viability_data.ghi - solar_viability_data.ghi.min()) / (
                 solar_viability_data.ghi.max() - solar_viability_data.ghi.min())
         solar_viability_data['electricity_normalized'] = (
