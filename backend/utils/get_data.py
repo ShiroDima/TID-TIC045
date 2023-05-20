@@ -132,7 +132,9 @@ class Datasets:
         solar_viability_data = gpd.read_file(f'{folder_path}/solar_viability_data.csv',
                                              GEOM_POSSIBLE_NAMES='geometry',
                                              KEEP_GEOM_COLUMNS='NO')
-        
+
+        solar_viability_data.ghi = solar_viability_data.ghi.astype('float')
+        solar_viability_data.percent_electricity = solar_viability_data.percent_electricity.astype('float')
         solar_viability_data['ghi_normalized'] = (solar_viability_data.ghi - solar_viability_data.ghi.min()) / (
                 solar_viability_data.ghi.max() - solar_viability_data.ghi.min())
         solar_viability_data['electricity_normalized'] = (
