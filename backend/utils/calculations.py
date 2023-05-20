@@ -71,10 +71,12 @@ def viability_score(location: str) -> float:
     distance = list(data.solar_viability.geometry.distance(location))
     distance = min(distance)
 
+    score = 0
     for _, row in data.solar_viability.iterrows():
         if row.geometry.contains(location):
             ghi = row.ghi_normalized
             electricity = row.electricity_normalized
             score = (weight_ghi * ghi) + (weight_distance * distance) + (weight_electricity * electricity)
-            return score
+
+    return score
 
