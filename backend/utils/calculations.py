@@ -51,7 +51,7 @@ def distance_calculator(longitude, latitude, n_closest):
 # print(distance_calculator(7.5000, 5.20000, 5))
 
 
-def viability_score(location: str) -> float:
+def viability_score(loc: str) -> float:
     """
         This function calculates the score for a particular region. This score is an indicator of the potential of a region
         as a good place for solar power intervention.
@@ -60,7 +60,7 @@ def viability_score(location: str) -> float:
     weight_distance = 0.4
     weight_electricity = 0.2
 
-    latitude, longitude = get_coordinates(location)
+    latitude, longitude = get_coordinates(loc)
 
     location = Point(longitude, latitude)
     transformer = pyproj.Transformer.from_crs("EPSG:4326", "EPSG:32645")
@@ -68,14 +68,20 @@ def viability_score(location: str) -> float:
 
     # I've not normalized the distance
     # distance = list(transmission_substations.geometry.distance(location))
-    distance = list(data.solar_viability.geometry.distance(location))
+    distance = list((data.solar_viability.geometry.distance(location)))
+    distance = list((data.solar_viability.geometry.distance(location) - data.solar_viability.geometry.distance(location).min())/(data.solar_viability.geometry.distance(location).max() - data.solar_viability.geometry.distance(location).min()))
     distance = min(distance)
     ghi = []
     electricity = []
     for _, row in data.solar_viability.iterrows():
-        if row.geometry.contains(location):
+        # if row.geometry.contains(location):
+        if row.state == loc:
             ghi.append(row.ghi_normalized)
             electricity.append(row.electricity_normalized)
 
-        return (weight_ghi * ghi[0]) + (weight_distance * distance) + (weight_electricity * electricity[0])
+    return (weight_ghi * ghi[0]) + (weight_distance * distance) + (weight_electricity * electricity[0])
+
+if __name__ == "__main__":
+    print(viability_score("Niger"))
+
 
