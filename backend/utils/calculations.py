@@ -68,7 +68,7 @@ def viability_score(loc: str) -> float:
 
     # I've not normalized the distance
     # distance = list(transmission_substations.geometry.distance(location))
-    distance = list((data.solar_viability.geometry.distance(location)))
+    # distance = list((data.solar_viability.geometry.distance(location)))
     distance = list((data.solar_viability.geometry.distance(location) - data.solar_viability.geometry.distance(location).min())/(data.solar_viability.geometry.distance(location).max() - data.solar_viability.geometry.distance(location).min()))
     distance = min(distance)
     ghi = []
