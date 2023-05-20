@@ -2,7 +2,8 @@ import geopandas as gpd
 import pandas as pd
 
 folder_path = "../data"
-link_path = "./utils"
+# link_path = "./utils"
+link_path = ""
 
 
 class Datasets:
@@ -68,7 +69,8 @@ class Datasets:
 
         # Applies the function across all states dataset and appends the result to the empty list
         irradiance_list = []
-        with open(f'{link_path}/links.txt', 'r') as links:
+        # with open(f'{link_path}/links.txt', 'r') as links:
+        with open(f'{folder_path}/links.txt', 'r') as links:
             filepaths = links.read().split('\n')
         for index, link in enumerate(filepaths):
             state = solcast_index.loc[index, 'State']
