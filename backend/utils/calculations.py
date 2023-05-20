@@ -75,6 +75,6 @@ def viability_score(location: str) -> float:
         if row.geometry.contains(location):
             ghi = row.ghi_normalized
             electricity = row.electricity_normalized
-
-    return (weight_ghi * ghi) + (weight_distance * distance) + (weight_electricity * electricity)
+            score = (weight_ghi * ghi) + (weight_distance * distance) + (weight_electricity * electricity)
+            return score
 
