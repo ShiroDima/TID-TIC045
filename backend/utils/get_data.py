@@ -8,26 +8,25 @@ link_path = ""
 
 class Datasets:
     def __init__(self) -> None:
-
         # Loading all the datasets
         self.power_plants = gpd.read_file(f"{folder_path}/power_plants.csv",
-                                    GEOM_POSSIBLE_NAMES='geom',
-                                    KEEP_GEOM_COLUMNS='NO')
+                                          GEOM_POSSIBLE_NAMES='geom',
+                                          KEEP_GEOM_COLUMNS='NO')
 
         self.power_plants_2 = gpd.read_file(
             f'{folder_path}/NGA_PowerPlants/NGA_PowerPlants.shp')
 
         self.state_boundaries = gpd.read_file(f'{folder_path}/nigeria_state_boundaries.csv',
-                                        GEOM_POSSIBLE_NAMES='geom',
-                                        KEEP_GEOM_COLUMNS='NO')
+                                              GEOM_POSSIBLE_NAMES='geom',
+                                              KEEP_GEOM_COLUMNS='NO')
 
         self.transmission_substations = gpd.read_file(f'{folder_path}/all_transmission_substations.csv',
-                                                GEOM_POSSIBLE_NAMES='geom',
-                                                KEEP_GEOM_COLUMNS='NO')
+                                                      GEOM_POSSIBLE_NAMES='geom',
+                                                      KEEP_GEOM_COLUMNS='NO')
 
         self.grid = gpd.read_file(f'{folder_path}/modelled_grid_original.csv',
-                            GEOM_POSSIBLE_NAMES='geom',
-                            KEEP_GEOM_COLUMNS='NO')
+                                  GEOM_POSSIBLE_NAMES='geom',
+                                  KEEP_GEOM_COLUMNS='NO')
 
         self.irradiance = self.get_ghi_data()
 
@@ -35,7 +34,7 @@ class Datasets:
 
         self.solar_viability = self._get_solar_viability_data()
         # self.convert_to_crs_types()
-    
+
     # def convert_to_crs_types(self) -> None:
     #     # power_plants
     #     self.power_plants.set_crs("EPSG:3857", inplace=True)
@@ -59,7 +58,6 @@ class Datasets:
     #     self.grid.to_crs("EPSG:4326",inplace=True)
 
     def get_ghi_data(self):
-
         solcast_index = pd.read_csv(f"{folder_path}/Solcast/Solcast/solcast_index.csv")
 
         state_boundaries = gpd.read_file(f'{folder_path}/nigeria_state_boundaries.csv', GEOM_POSSIBLE_NAMES='geom',
@@ -74,7 +72,9 @@ class Datasets:
             filepaths = links.read().split('\n')
         for index, link in enumerate(filepaths):
             state = solcast_index.loc[index, 'State']
-            irradiance_list.append(self._get_irradiance(state, link.replace("/content/drive/MyDrive/TID_Innovation/Data", f"{folder_path}/Solcast")))
+            irradiance_list.append(self._get_irradiance(state,
+                                                        link.replace("/content/drive/MyDrive/TID_Innovation/Data",
+                                                                     f"{folder_path}/Solcast")))
 
         # Creates_DataFrame
         Ghi = [item[0] for item in irradiance_list]
@@ -129,12 +129,15 @@ class Datasets:
         """
         This function reads in and prepares the solar viability dataframe.
         """
-        solar_viability_data = pd.read_csv(f'{folder_path}/solar_viability_data.csv')
+        solar_viability_data = gpd.read_file(f'{folder_path}/solar_viability_data.csv',
+                                             GEOM_POSSIBLE_NAMES='geometry',
+                                             KEEP_GEOM_COLUMNS='NO')
+        
         solar_viability_data['ghi_normalized'] = (solar_viability_data.ghi - solar_viability_data.ghi.min()) / (
-                    solar_viability_data.ghi.max() - solar_viability_data.ghi.min())
+                solar_viability_data.ghi.max() - solar_viability_data.ghi.min())
         solar_viability_data['electricity_normalized'] = (
-                        solar_viability_data.percent_electricity - solar_viability_data.percent_electricity.min()) / \
-                    (solar_viability_data.percent_electricity.max() - solar_viability_data.percent_electricity.min())
+                                                                 solar_viability_data.percent_electricity - solar_viability_data.percent_electricity.min()) / \
+                                                         (
+                                                                     solar_viability_data.percent_electricity.max() - solar_viability_data.percent_electricity.min())
 
         return solar_viability_data
-
