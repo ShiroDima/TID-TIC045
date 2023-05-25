@@ -1,28 +1,33 @@
 import geopandas as gpd
 import pandas as pd
 
-folder_path = __file__ + "/../../../data"
+# get path of data folder
+from pathlib import Path
+parent_path = str( Path(__file__).parent.absolute() )
+
+data_folder_path = parent_path + "/../../data"
+# --------------------------------------------
 
 
 class Datasets:
     def __init__(self) -> None:
         # Loading all the datasets
-        self.power_plants = gpd.read_file(f"{folder_path}/power_plants.csv",
+        self.power_plants = gpd.read_file(f"{data_folder_path}/power_plants.csv",
                                           GEOM_POSSIBLE_NAMES='geom',
                                           KEEP_GEOM_COLUMNS='NO')
 
         self.power_plants_2 = gpd.read_file(
-            f'{folder_path}/NGA_PowerPlants/NGA_PowerPlants.shp')
+            f'{data_folder_path}/NGA_PowerPlants/NGA_PowerPlants.shp')
 
-        self.state_boundaries = gpd.read_file(f'{folder_path}/nigeria_state_boundaries.csv',
+        self.state_boundaries = gpd.read_file(f'{data_folder_path}/nigeria_state_boundaries.csv',
                                               GEOM_POSSIBLE_NAMES='geom',
                                               KEEP_GEOM_COLUMNS='NO')
 
-        self.transmission_substations = gpd.read_file(f'{folder_path}/all_transmission_substations.csv',
+        self.transmission_substations = gpd.read_file(f'{data_folder_path}/all_transmission_substations.csv',
                                                       GEOM_POSSIBLE_NAMES='geom',
                                                       KEEP_GEOM_COLUMNS='NO')
 
-        self.grid = gpd.read_file(f'{folder_path}/modelled_grid_original.csv',
+        self.grid = gpd.read_file(f'{data_folder_path}/modelled_grid_original.csv',
                                   GEOM_POSSIBLE_NAMES='geom',
                                   KEEP_GEOM_COLUMNS='NO')
 
@@ -56,22 +61,22 @@ class Datasets:
     #     self.grid.to_crs("EPSG:4326",inplace=True)
 
     def get_ghi_data(self):
-        solcast_index = pd.read_csv(f"{folder_path}/Solcast/Solcast/solcast_index.csv")
+        solcast_index = pd.read_csv(f"{data_folder_path}/Solcast/Solcast/solcast_index.csv")
 
-        state_boundaries = gpd.read_file(f'{folder_path}/nigeria_state_boundaries.csv', GEOM_POSSIBLE_NAMES='geom',
+        state_boundaries = gpd.read_file(f'{data_folder_path}/nigeria_state_boundaries.csv', GEOM_POSSIBLE_NAMES='geom',
                                          KEEP_GEOM_COLUMNS='NO')
 
         # literally cut and join. Will be revised later.
 
         # Applies the function across all states dataset and appends the result to the empty list
         irradiance_list = []
-        with open(f'{folder_path}/links.txt', 'r') as links:
+        with open(f'{data_folder_path}/links.txt', 'r') as links:
             filepaths = links.read().split('\n')
         for index, link in enumerate(filepaths):
             state = solcast_index.loc[index, 'State']
             irradiance_list.append(self._get_irradiance(state,
                                                         link.replace("/content/drive/MyDrive/TID_Innovation/Data",
-                                                                     f"{folder_path}/Solcast")))
+                                                                     f"{data_folder_path}/Solcast")))
 
         # Creates_DataFrame
         Ghi = [item[0] for item in irradiance_list]
@@ -102,7 +107,7 @@ class Datasets:
 
     @staticmethod
     def get_electricity_data():
-        file = f"{folder_path}/Nigeria Electricity Data.xlsx"
+        file = f"{data_folder_path}/Nigeria Electricity Data.xlsx"
         df_2021 = pd.read_excel(file, sheet_name="2021 MIS").set_index("State").drop(columns=["Country", "Survey"])
         df_2018 = pd.read_excel(file, sheet_name="2018 DHS").set_index("State").drop(columns=["Country", "Survey"])
         df_2015 = pd.read_excel(file, sheet_name="2015 MIS").set_index("State").drop(columns=["Country", "Survey"])
@@ -126,7 +131,7 @@ class Datasets:
         """
         This function reads in and prepares the solar viability dataframe.
         """
-        solar_viability_data = gpd.read_file(f'{folder_path}/solar_viability_data.csv',
+        solar_viability_data = gpd.read_file(f'{data_folder_path}/solar_viability_data.csv',
                                              GEOM_POSSIBLE_NAMES='geometry',
                                              KEEP_GEOM_COLUMNS='NO')
 
