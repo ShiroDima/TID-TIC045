@@ -10,12 +10,20 @@ sys.path.append('./utils')
 app = Flask(__name__)
 
 
+@app.route("/test")
+def get_test():
+    location = request.args.get('location')
+    print(location)
+
+    return "testing"
+
 @app.route("/score")
+
 def get_score():
+
     location = request.args.get('location')
 
     return calc.viability_score(location)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
