@@ -1,10 +1,10 @@
 
 var locations = 
 [
-   "Abuja",
+   // "Abuja",
    "Abia",
    "Adamawa",
-   "Akwa Ibom",
+   // "Akwa Ibom",
    "Anambra",
    "Bauchi",
    "Bayelsa",
@@ -26,7 +26,7 @@ var locations =
    "Kogi",
    "Kwara",
    "Lagos",
-   "Nassarawa",
+   "Nasarawa",
    "Niger",
    "Ogun",
    "Ondo",
