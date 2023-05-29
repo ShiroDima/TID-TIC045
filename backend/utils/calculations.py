@@ -52,6 +52,7 @@ def distance_calculator(longitude, latitude, n_closest):
 
 
 def viability_score(loc: str) -> float:
+    print(f'Computing viability score : {loc}...')
     """
         This function calculates the score for a particular region. This score is an indicator of the potential of a region
         as a good place for solar power intervention.

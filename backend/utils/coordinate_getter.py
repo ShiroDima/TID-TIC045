@@ -2,6 +2,8 @@ import requests
 
 
 def get_coordinates(address):
+    print(f'getting coordinates for "{address}"...')
+
     """This function gets the coordinates of a given address
 
     Args:
@@ -15,6 +17,7 @@ def get_coordinates(address):
     url = "https://nominatim.openstreetmap.org/search"
 
     def contact_api(address):
+        print(f'contacting api : {address}...')
         # Define the parameters for the API request
         params = {"q": address, "format": "jsonv2"}
 
